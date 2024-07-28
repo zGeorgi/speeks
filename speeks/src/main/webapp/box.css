@@ -1,0 +1,58 @@
+
+
+#login-form /*position in center*/
+{
+ position: fixed; /* or absolute */
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  margin-top:-15%;  /* this is half the height of your div*/  
+  margin-left:-10%;  /*this is half of width of your div*/
+}
+table  
+{
+	
+ text-align: center;
+ border:solid #dcdcdc 1px;
+ padding:25px;
+}
+table tr,td 
+{
+ padding:5px;
+ border:solid #e1e1e1 1px;
+}
+table tr td input
+{
+ width:97%;
+ height:100%;
+ border:solid #e1e1e1 1px;
+ border-radius:5px;
+ padding-left:10px;
+ font-family:Verdana, Geneva, sans-serif;
+ font-size:100%;
+ background:#f9f9f9;
+
+}
+
+table tr td button 
+{
+ width:100%;
+ height: 100%;
+ border:1px;
+ background:rgba(12,45,78,11);
+ border-radius:3px;
+ color:#f9f9f9;
+ font-family:Verdana, Geneva, sans-serif;
+ font-size:100%;
+ font-weight:bolder;
+ text-transform:uppercase;
+}
+
+table tr td a 
+{
+ text-decoration:underline;
+ color:#00a2d1;
+ font-family:Verdana, Geneva, sans-serif;
+ font-size:100%;
+}
+

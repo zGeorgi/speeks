@@ -1,0 +1,130 @@
+@charset "UTF-8";
+* {
+    box-sizing: border-box; /* border is include in div size*/
+	border:#1F1D1D
+}
+
+body {
+  margin: 0;
+}
+
+/* Style the header */
+.header {
+    background-color: #f1f1f1;
+    padding:1px;
+    text-align: center;
+}
+.header h1{
+	 padding: 0px;
+	 margin: 0px;
+}
+.header img{
+	height:150px;
+   width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle; 
+	padding: 1px;
+}
+#userName{
+	text-align: center;
+	padding:1px;
+}
+/* Style the top navigation bar */
+.topnav {
+    overflow: hidden;
+    background-color: #333333;
+}
+#UpProfPic{
+	display:none;
+	
+}
+#SetProfile:hover  #UpProfPic{
+	display:block;
+
+}
+
+/* Style the topnav links */
+.topnav a {
+    float: right;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+     border: 1px solid #4f4f4f;
+    height:100%;
+    margin: 0px;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+/*  --------------Logout button          */
+div.logout{
+		float: left;
+	  padding-bottom:5px;
+	  height: 100%;
+	   padding-left:5px;
+	   padding-top: 0px;
+}
+
+
+
+
+/* ----------------CONTAINER  TEXT INPUT SEND FILE AND LOCATION--------*/
+#textarea{
+	max-width:75%;
+	height:100%;
+	float:left;
+}
+#sendBtn{
+	
+	background-color:gray;
+	float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+	height:100%;
+}
+.putText{
+	background-color:#c0c0c0;
+	height:20%;
+	padding-bottom:5px;
+	border: 5px solid #c0c0c0;
+	display:block;
+}
+.row .putText #fileSelect{
+	color: green;
+	display:block;
+	background-color:#363636;
+	height:50%;
+	text-align:center;
+	padding-top:5px;
+	text-decoration: none;
+	float:left;
+	width:100px; 
+}
+#locBtn{
+	height:50%;
+	display:block;
+	background-color:#326363;
+	text-align:center;
+	padding-top:5px;
+	text-decoration: none;
+	float:left;
+	width:100px; 
+}
+

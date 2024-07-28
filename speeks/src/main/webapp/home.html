@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Chat</title>
+
+<link rel="stylesheet" type="text/css" href="homePage.css">
+<link rel="stylesheet" type="text/css" href="homePageContainer.css">
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyDGLzHipJWJMVVpAv2Ifp1OQxLOqAGHs8o"></script>
+<script src="js/FileSaver.js"></script>
+<script src="js/homeSSE.js"></script>
+<script src="js/myJs.js"></script>
+<script src="js/jsLocLout.js"></script>
+
+<script type="text/javascript">
+
+//-----G variable------
+var token = $.cookie("token");
+var userName = $.cookie("username");
+var frend = $.cookie("frend");
+var url = window.location;
+
+
+//--------------secure check--------
+$(document).ready(function(){
+	var  secure;
+	if (window.XMLHttpRequest) { 
+		secure = new XMLHttpRequest();
+	} else {
+		secure = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	secure.open('get', 'http://localhost:8080/speeks/webapi/secured/home', true);
+	secure.setRequestHeader ("Authorization", "Basic " + token);
+	secure.send();
+	secure.onreadystatechange = function () {
+	    if (secure.readyState === 4) {                // 4 = Response from server has been completely loaded.
+	      if (secure.status == 200 && secure.status <300){
+	    	  document.getElementById('userName').innerHTML = "Welcom "+userName.toUpperCase(); 
+	    	  //----set user status online----
+	    	  status("online", token);    	  
+	    	  //------------------load profile pictures---
+	    	  loadAvatar(token,userName, 'profilePic');  
+	    	 
+	    	  loadFrends(token); //load users
+	    	  SSE(token); 	//open SSE conection	
+	      }
+	      else{
+	    	  window.location.href  = 'http://localhost:8080/speeks';
+	      }
+	    	 
+	   }
+	}
+	
+});
+	// if frend is chosen
+if(frend != undefined){
+	getMessages(token);
+	
+//------load frend avatar --------
+	 loadAvatar(token, frend, 'profilePicFrend'); 
+}
+	
+//------------ Choise Frend to write---------
+function opens(val){
+	document.cookie = "frend="+ val; 
+	 window.location.href  ='http://localhost:8080/speeks/home.html'; // url;
+}	  
+
+//-------------------DOWNLOAD FILE---------
+function download(fileName) {
+	 try {
+		    var isFileSaverSupported = !!new Blob;
+		    
+		   			 var req;
+		    if (window.XMLHttpRequest) { 
+		    	req = new XMLHttpRequest();
+			} else {
+				req = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		    
+		    req.open("POST", "http://localhost:8080/speeks/webapi/secured/down", true);
+		    req.setRequestHeader ("Authorization", "Basic " + token);
+		    //req.setRequestHeader ("Name", encodeURIComponent(fileName));
+		    req.responseType = "blob";
+		    req.send(fileName);
+		    
+		    req.onload = function (event) {       	   
+		       var blob = req.response;
+		        saveAs(blob, fileName);                    
+		    };
+		   
+		} 
+	 catch (e) {
+		 alert(e);
+	 }
+		 
+}
+
+//----------file upload-----------
+function handleFiles(input){
+    var files = input.files;
+    if (!files) {
+        // workaround for IE
+        files = [];            
+        files.push({
+            name: input.value.substring(input.value.lastIndexOf("\\")+1),
+            size: 0,  // it's not possible to get file size w/o flash or so
+            type: input.value.substring(input.value.lastIndexOf(".")+1)
+        });
+    }
+    // do whatever you need to with the `files` variable
+    console.log("profilna snimka ime "+files[0].name); 
+	    var  avat;
+		if (window.XMLHttpRequest) { 						
+				avat = new XMLHttpRequest();
+		} else {						
+		avat = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+    
+	var formData= new FormData();  
+
+	formData.append('file', files[0]/*, files[0].name*/); //for IE & EDGE support
+	
+	avat.open('post', 'http://localhost:8080/speeks/webapi/secured/avatar', true);  
+	avat.setRequestHeader ("Authorization", "Basic " + token);
+	avat.setRequestHeader ("FileName",  encodeURIComponent(files[0].name));
+	avat.send(formData); 
+	
+		avat.onreadystatechange = function(){
+			if(avat.status === 200 && avat.readyState === 4){ 
+	 			alert("Successfull");
+				setTimeout(function () { location.reload(1); }, 5000);
+			
+					}
+		}
+	
+}
+
+
+
+
+//------------------SEND Coordinate--------
+function getLocation(token) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+       
+    } else { 
+    	alert("Geolocation is not supported by this browser.");
+    	
+    }
+} 
+
+function showPosition(position) {
+	if(frend != undefined){
+	var  lat = position.coords.latitude; 
+    var  lon = position.coords.longitude;
+    var posi = lat+","+lon;
+
+ var msg = "<button id=\'1\'  onclick = showMap("+lat+","+lon+")>ShowMap</button>";
+    var loc;
+
+	   if (window.XMLHttpRequest) { 						
+	   	loc = new XMLHttpRequest();
+		} else {						
+				loc = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+	   /*broadcast*/
+	   loc.open('post', 'http://localhost:8080/speeks/webapi/broadcast', true);
+	   loc.setRequestHeader ("Authorization", "Basic "+ token);
+	  loc.setRequestHeader ("EventType", "UpdateMessage");
+	   loc.send(msg);
+	   
+	   loc.onreadystatechange = function () {
+		
+			   if (loc.readyState == 4) { 	
+				   if (loc.status == 200 && loc.status <300){
+					   getMessages(token);
+     				   }    				    				   
+			   }
+		}
+	}else{
+		alert("Select USER!")
+	}
+}  
+	
+</script>
+</head>
+<body>
+
+<div class="header">
+
+		 	<h1>Chat</h1>
+		<div id= "profilePic">
+			
+		</div>
+			 <div id= "userName"> Welcom  User </div>
+		  </div>
+
+<div class="topnav">
+	 <div class = "logout"> <a href="#" onclick = "logout()">Logout </a> </div>
+	
+	  <a href="http://localhost:8080/speeks/changePassword.html">Change Password</a>
+	  <a href="#" id = "SetProfile"> Set Profile image<input type="file" id="UpProfPic" onchange="handleFiles(this)" ></a>
+	 
+</div>
+<div class="container">
+		<div class="row">
+			 <div id="users">
+							<h2>USERS</h2>
+			 </div>
+					  
+		  <div class="msg">
+								<div id="frendPic">
+									<div id= "profilePicFrend" ><img src="avatar/logo.jpg" ></div>
+									<p id="frend_name">userName</p>
+								</div>
+								
+				<div id="frendMsg"> 
+					
+									<div id="msgDB"></div>
+										<div class="putText">
+													<textarea rows="5" cols= "100%" id= "textarea" ></textarea>
+													<button id= "sendBtn" onclick = "updateMsg()">SEND </button>
+													
+													<input type= "file" id= "fileElem"   style="display:none" >
+													<a href= "#" id = "fileSelect">Send file</a>
+													<a id="locBtn" onclick= "getLocation(token)">Share location</a>
+	<script>
+	//-------------HIDEN FILE UPLOAD------
+	var fileSelect = document.getElementById("fileSelect"),
+	  fileElem = document.getElementById("fileElem");
+
+	fileSelect.addEventListener("click", function (e) {
+		if(frend != undefined){
+				
+	  if (fileElem) {
+	    fileElem.click();
+	    fileElem.onchange = function(event) {
+			    	var fileName = fileElem.files[0];
+			    	console.log("file name "+fileName.name);
+			        		
+	    	   var  file;
+						if (window.XMLHttpRequest) { 						
+							file = new XMLHttpRequest();
+						} else {						
+							file = new ActiveXObject("Microsoft.XMLHTTP");
+						}
+				var formData= new FormData();  
+				
+				formData.append('file', fileElem.files[0]/*, fileElem.files[0].name*/);// 'fileElem.files[0].name' add fileName for IE & EDGE supprot
+				file.open('post', 'http://localhost:8080/speeks/webapi/secured/upFile', true);  
+				file.setRequestHeader ("Authorization", "Basic " + token);
+				
+				file.setRequestHeader ("Location", "share" );
+				
+				file.setRequestHeader ("FileName",  encodeURIComponent(fileElem.files[0].name));
+				file.send(formData);
+							//call second service 'webapi/secured'  for broadcast update message with file name
+				file.onreadystatechange = function(){
+							if(file.status === 200 && file.readyState === 4){ 					 			
+					 			var  up_msg;
+							        		if (window.XMLHttpRequest) { 
+							        			up_msg = new XMLHttpRequest();
+							        		} else {
+							        			up_msg = new ActiveXObject("Microsoft.XMLHTTP");
+							        		}
+				        		
+				        	var msg = '<button id=\'1\'  onclick= \'download('+'\\"'+fileName.name+'\\"'+')\'>'+fileName.name+'</button>';
+				        //BROADCATS 
+				        		up_msg.open('post', 'http://localhost:8080/speeks/webapi/broadcast', true);
+				        		up_msg.setRequestHeader ("Authorization", "Basic " + token);
+				        		up_msg.setRequestHeader ("EventType", "UpdateMessage");
+				        		up_msg.send(msg);
+				        		alert(file.responseText);	
+				        		getMessages(token);	
+				        		
+									}
+				}  
+	    	}
+	   }
+	}
+		else{
+			alert("Select USER!")
+	  }
+
+	  e.preventDefault(); // prevent navigation to "#"
+	}, false);	
+											
+</script>
+										</div> 
+										
+						</div>
+				</div>
+				
+			<div class="location">
+							<h2>LOCATION</h2>	
+											
+							  <div id="map"> <img src="avatar/map.jpg"></div>
+			</div>
+		</div>
+</div>
+</body>
+
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

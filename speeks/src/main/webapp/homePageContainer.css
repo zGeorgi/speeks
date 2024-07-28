@@ -1,0 +1,161 @@
+@charset "UTF-8";
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media (max-width:600px) {
+    .column {
+        width: 100%;
+    }
+}
+
+.container{
+	height:100vh;
+	background-color:#7b7a81;
+}
+
+/*--------------- USERS----------------------------------------------------------*/
+#users {
+    float: left;
+    width: 20%;
+	height: 100vh; /*viewport to be on hold page hight  100vh*/
+    padding: 5px;
+	background-color: #ebebeb;
+	text-align:center;
+}
+#users p{
+	display: block;
+	background-color: #808080;
+	margin:3px;
+	padding:5px;
+	text-align:left;
+}
+/* #users p img{width:30%; height:100%; margin-right:2px;}*/
+
+/* ------ BOX FOR MESSAGES---------------------------------------------------------------*/
+.msg {/* box style */
+    float: left;
+    width: 60%;
+	height: 100vh;
+    padding: 5px;
+	background-color: #ebebeb;
+}
+/* messages header------------------------ */
+#frendPic{
+	 width: 100%;
+	max-height: 30%;
+	background-color:#c0c0c0;
+	text-align: center;
+}
+#frendPic img{
+	max-height: 100px;
+    max-width: 190px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+	padding: 1px;
+}
+
+#frendPic p{
+	text-align: center;
+	margin:0px;
+	padding:0px;
+}
+/* messages container-------------------- */
+#frendMsg{
+	width: 100%;
+	height: 70%;
+	background-color: #f3f3f3;
+}
+#msgDB{
+	width:100%;
+	height:95%;
+	background-color:#c0c0c0;
+	border: 2px solid #ffffff;
+	overflow: scroll; 
+	
+}
+
+
+
+.showMap{
+	color:#d2d2ff;
+	text-align: center;
+	
+}
+/*---FREND messages--------------------*/
+#msgDB .frend{
+	
+	 background-color:#6e6e6e;
+	  margin:1px;
+}
+#msgDB .frend#NO{
+		background-color:#8a4500;
+}
+#msgDB .frend p{
+	margin: 1px;
+}
+
+#msgFrend{/* frend name */
+	text-align: right;
+	color: #ffa346;
+	padding-right:5px; 
+	
+}
+#msgMy{/*my name*/
+	color: #ffff80;
+	padding-left:5px;
+}
+#fMsg{/*frend messagess style*/
+	text-align: right;
+	padding-right:35px;
+	
+	color:#000000;
+}
+#myMsg{/* my messages style*/
+	padding-left: 35px;
+	color:#ffffff;
+}
+#msgDate{
+	text-align: center;
+	color: #cacaff;
+	display:none;
+}
+
+#msgDB div:hover #msgDate{/*display date */
+	display:block;
+}
+
+/* ---- MY Messages--------------------style*/
+#msgDB .I{
+	
+	 background-color:#8b7487;
+	 margin:1px;
+}
+#msgDB .I p{
+	margin: 1px;
+	
+}
+
+
+/*--------LOCATION -------------------------------------------------*/
+.location {
+    float: left;
+    width: 20%;
+	height: 100vh;
+     padding: 5px;
+	background-color: #ebebeb;
+	text-align: center;
+	display: block;
+}
+#map{
+	width: 100%;
+	max-height: 500px;
+	padding: 1px;
+	
+}
+
+#map img{
+	width: 100%;
+	height: 100%;
+}
+

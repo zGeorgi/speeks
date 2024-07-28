@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Registration</title>
+<link rel="stylesheet" type="text/css" href="box.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.js"></script>
+
+</head>
+
+<body>
+
+<script>
+function validateForm()
+	{
+	
+	   var pass = document.forms["myForm"]["password"].value;
+	
+	   var uName = document.forms["myForm"]["username"].value;
+	
+	
+	   var patt = new RegExp("[^A-Za-z0-9!@#$%&*()_+-=[]|,./?><]");
+	 
+	   if( patt.test(pass) || patt.test(uName) ) {  
+	      
+	    	  alert("The fields should be fieled in only with Latine letters, numbers and special characters!" );
+		      return false;	     	       
+	   }
+	   else{
+			   if(pass.length >= 6){
+				   return true;
+			   }else{
+				   
+			         alert("Bad password ..add more symbols");
+			 		  return false;
+		   		}		
+	      }
+	}
+</script>
+
+<div id="login-form">
+
+<form name= "myForm" onsubmit="return validateForm()"action="http://localhost:8080/speeks/webapi/registartion"   method="post">
+<table>
+
+<tr>
+<td><input type="text" name="username" placeholder="Your username"  required/> </td>
+</tr>
+<tr>
+<td><input type="email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" name="email" placeholder="Your email" required /></td>
+</tr>
+<tr>
+<td> <input type="password"  name="password" placeholder="Your password"  required /></td>
+</tr>
+<tr>
+<td><button type="submit" name="btn-signup">Sign Me Up</button></td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/speeks/">LogIn </a></td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/speeks/forgotPassword.html"> Forgot Password</a></td>
+</tr>
+</table>
+</form>
+</div>
+
+
+</body>
+</html>
+
